@@ -6,5 +6,5 @@ import jakarta.persistence.Id;
 @Entity
 public class Food {
     @Id
-    Long
+    Long id;
 }
