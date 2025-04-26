@@ -1,10 +1,15 @@
 package com.evan.wearesikgu.domain.member;
 
+import com.evan.wearesikgu.common.superentity.SuperEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-public class Member {
+@Getter
+@Setter
+public class Member extends SuperEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
