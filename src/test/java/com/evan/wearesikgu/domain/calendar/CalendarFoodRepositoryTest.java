@@ -7,7 +7,6 @@ import com.evan.wearesikgu.domain.calendar.entity.Calendar;
 import com.evan.wearesikgu.domain.calendar.entity.CalendarFood;
 import com.evan.wearesikgu.domain.calendar.model.repository.CalendarFoodRepository;
 import com.evan.wearesikgu.domain.calendar.model.repository.CalendarRepository;
-import com.evan.wearesikgu.domain.food.entity.BigCategoryRepository;
 import com.evan.wearesikgu.domain.food.entity.Food;
 import com.evan.wearesikgu.domain.food.entity.FoodRepository;
 import com.evan.wearesikgu.domain.member.Member;
@@ -38,9 +37,6 @@ public class CalendarFoodRepositoryTest {
 
     @Autowired
     private FoodRepository foodRepository;
-
-    @Autowired
-    private BigCategoryRepository bigCategoryRepository;
 
     @Autowired
     private ModelMapper modelMapper;

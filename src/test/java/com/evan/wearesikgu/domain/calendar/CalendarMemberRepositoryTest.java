@@ -3,7 +3,6 @@ package com.evan.wearesikgu.domain.calendar;
 import com.evan.wearesikgu.domain.calendar.dtos.CalendarMemberDTO;
 import com.evan.wearesikgu.domain.calendar.entity.Calendar;
 import com.evan.wearesikgu.domain.calendar.entity.CalendarMember;
-import com.evan.wearesikgu.domain.calendar.model.repository.CalendarFoodRepository;
 import com.evan.wearesikgu.domain.calendar.model.repository.CalendarMemberRepository;
 import com.evan.wearesikgu.domain.calendar.model.repository.CalendarRepository;
 import com.evan.wearesikgu.domain.member.Member;

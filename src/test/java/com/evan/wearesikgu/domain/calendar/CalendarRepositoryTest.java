@@ -5,7 +5,6 @@ import com.evan.wearesikgu.domain.calendar.entity.Calendar;
 import com.evan.wearesikgu.domain.calendar.model.repository.CalendarRepository;
 import com.evan.wearesikgu.domain.member.Member;
 import com.evan.wearesikgu.domain.member.MemberRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;

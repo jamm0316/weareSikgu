@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CalendarFoodDTO extends SuperEntity {
+public class CalendarFoodDTO {
     private Long id;
     private LocalDate mealDate;
     private MealTime mealTime;
