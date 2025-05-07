@@ -14,8 +14,13 @@ public class KakaoOAuthController {
     OAuthService oAuthService;
 
     @GetMapping("/callback")
-    public BaseResponse<String> callback(@RequestParam String code) {
+    public BaseResponse<Object> callback(@RequestParam String code) {
         String accessToken = oAuthService.getAccessToken(code);
-        return new BaseResponse<>(accessToken);
+        KakaoUserInfoResponseDTO userInfo = getUserInfo(accessToken);
+        return new BaseResponse<>(userInfo);
+    }
+
+    private KakaoUserInfoResponseDTO getUserInfo(String accessToken) {
+        return oAuthService.getUserInfo(accessToken);
     }
 }

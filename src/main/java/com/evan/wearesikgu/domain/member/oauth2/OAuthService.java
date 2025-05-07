@@ -12,4 +12,8 @@ public class OAuthService {
     public String getAccessToken(String code) {
         return kakaoOAuthClient.requestAccessToken(code);
     }
+
+    public KakaoUserInfoResponseDTO getUserInfo(String accessToken) {
+        return kakaoOAuthClient.requestUserInfo(accessToken);
+    }
 }
