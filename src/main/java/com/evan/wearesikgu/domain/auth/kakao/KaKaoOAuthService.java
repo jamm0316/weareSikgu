@@ -1,10 +1,10 @@
-package com.evan.wearesikgu.domain.member.oauth2;
+package com.evan.wearesikgu.domain.auth.kakao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OAuthService {
+public class KaKaoOAuthService {
 
     @Autowired
     private KakaoOAuthClient kakaoOAuthClient;

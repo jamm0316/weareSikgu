@@ -1,11 +1,14 @@
-package com.evan.wearesikgu.domain.member.oauth2;
+package com.evan.wearesikgu.domain.auth.kakao;
 
+import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
+import com.evan.wearesikgu.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -32,13 +35,22 @@ public class KakaoOAuthClient {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<KakaoTokenResponseDTO> response = restTemplate.postForEntity(
-                "https://kauth.kakao.com/oauth/token",
-                request,
-                KakaoTokenResponseDTO.class
-        );
+        try {
+            ResponseEntity<KakaoTokenResponseDTO> response = restTemplate.postForEntity(
+                    "https://kauth.kakao.com/oauth/token",
+                    request,
+                    KakaoTokenResponseDTO.class
+            );
 
-        return response.getBody().getAccessToken();
+            return response.getBody().getAccessToken();
+
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.BAD_REQUEST &&
+                    e.getResponseBodyAsString().contains("KOE303")) {
+                throw new BaseException(BaseResponseStatus.KAKAO_REDIRECT_MISMATCH);
+            }
+            throw new BaseException(BaseResponseStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public KakaoUserInfoResponseDTO requestUserInfo(String accessToken) {

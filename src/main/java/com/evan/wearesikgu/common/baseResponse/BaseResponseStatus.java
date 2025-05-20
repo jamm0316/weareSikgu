@@ -16,6 +16,11 @@ public enum BaseResponseStatus {
     VALIDATION_ERROR(false, 2002, "요청 데이터가 유효하지 않습니다."),
 
     /**
+     * 3000: 외부 API 연동오류
+     */
+    KAKAO_REDIRECT_MISMATCH(false, 3001, "카카오 Redirect URI가 일치하지 않습니다."),
+
+    /**
      * 4000: 서버 오류
      */
     INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다.");
