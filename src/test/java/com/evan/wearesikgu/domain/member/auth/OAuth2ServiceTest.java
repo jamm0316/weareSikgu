@@ -1,5 +1,7 @@
-package com.evan.wearesikgu.domain.member.oauth2;
+package com.evan.wearesikgu.domain.member.auth;
 
+import com.evan.wearesikgu.domain.auth.kakao.KaKaoOAuthService;
+import com.evan.wearesikgu.domain.auth.kakao.KakaoTokenResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 public class OAuth2ServiceTest {
     @InjectMocks
-    private OAuthService oAuth2Service;
+    private KaKaoOAuthService oAuth2Service;
 
     @Mock
     private RestTemplate restTemplate;
