@@ -80,4 +80,6 @@ public class TokenProviderTest {
         //then
         assertThat(result).isTrue();
     }
+
+    //todo: 인증정보로 사용자 정보 가져오는 API 만들기 (ROLE이 없으므로 아직 구현 안함)
 }
