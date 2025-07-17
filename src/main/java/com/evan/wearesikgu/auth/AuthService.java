@@ -1,7 +1,5 @@
 package com.evan.wearesikgu.auth;
 
-import com.evan.wearesikgu.auth.oauth.OAuth2Provider;
-import com.evan.wearesikgu.auth.oauth.OAuthServiceFactory;
 import com.evan.wearesikgu.auth.oauth.OAuthUserInfo;
 import com.evan.wearesikgu.config.security.jwt.TokenProvider;
 import com.evan.wearesikgu.domain.member.Member;

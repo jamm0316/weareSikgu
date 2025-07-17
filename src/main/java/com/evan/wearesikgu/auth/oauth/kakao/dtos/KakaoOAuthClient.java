@@ -4,8 +4,6 @@ import com.evan.wearesikgu.auth.config.OAuth2Properties;
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
 import com.evan.wearesikgu.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;

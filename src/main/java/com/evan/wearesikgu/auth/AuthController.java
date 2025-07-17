@@ -1,22 +1,12 @@
 package com.evan.wearesikgu.auth;
 
-import com.evan.wearesikgu.auth.config.OAuth2Properties;
-import com.evan.wearesikgu.auth.oauth.OAuth2Provider;
-import com.evan.wearesikgu.auth.oauth.OAuthService;
-import com.evan.wearesikgu.auth.oauth.OAuthServiceFactory;
 import com.evan.wearesikgu.auth.oauth.OAuthUserInfo;
 import com.evan.wearesikgu.common.baseResponse.BaseResponse;
-import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
-import com.evan.wearesikgu.common.exception.BaseException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.util.Locale;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
