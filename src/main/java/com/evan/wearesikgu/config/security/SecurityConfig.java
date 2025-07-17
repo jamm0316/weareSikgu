@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())  //REST API에서는 CSRF 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico","/api/auth/**").permitAll()  //로그인, 회원가입은 인증없이 허용
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.ico","/api/auth/**", "/api/oauth/**").permitAll()  //로그인, 회원가입은 인증없이 허용
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()  //나머지는 API인증 필요
                 )//세션 사용 X

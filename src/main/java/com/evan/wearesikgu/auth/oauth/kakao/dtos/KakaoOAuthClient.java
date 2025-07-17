@@ -1,9 +1,9 @@
-package com.evan.wearesikgu.domain.auth.kakao.dtos;
+package com.evan.wearesikgu.auth.oauth.kakao.dtos;
 
+import com.evan.wearesikgu.auth.config.OAuth2Properties;
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
 import com.evan.wearesikgu.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,21 +16,26 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoOAuthClient {
 
     private final RestTemplate restTemplate;
-
-    @Value("${kakao.rest-api-key}")
-    private String clientId;
-
-    @Value("${kakao.redirect-uri}")
-    private String redirectUri;
+    private final OAuth2Properties oAuth2Properties;
+//    @Value("${oauth2.providers.kakao.rest-api-key}")
+//    private String clientId;
+//
+//    @Value("${oauth2.providers.kakao.redirect-uri}")
+//    private String redirectUri;
 
     public String requestAccessToken(String code) {
+        OAuth2Properties.Provider kakaoProvider = oAuth2Properties.getProviders().get("kakao");
+        if (kakaoProvider == null) {
+            throw new BaseException(BaseResponseStatus.UNSUPPORTED_PROVIDER);
+        }
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
+        params.add("client_id", kakaoProvider.getRestApiKey());
+        params.add("redirect_uri", kakaoProvider.getRedirectUri());
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
@@ -53,17 +58,17 @@ public class KakaoOAuthClient {
         }
     }
 
-    public KakaoUserInfoResponseDTO requestUserInfo(String accessToken) {
+    public KakaoUserInfoDTO requestUserInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
-        ResponseEntity<KakaoUserInfoResponseDTO> response = restTemplate.exchange(
+        ResponseEntity<KakaoUserInfoDTO> response = restTemplate.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.GET,
                 request,
-                KakaoUserInfoResponseDTO.class
+                KakaoUserInfoDTO.class
         );
 
         return response.getBody();

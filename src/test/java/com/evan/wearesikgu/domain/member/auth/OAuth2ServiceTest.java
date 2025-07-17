@@ -1,7 +1,7 @@
 package com.evan.wearesikgu.domain.member.auth;
 
-import com.evan.wearesikgu.domain.auth.kakao.model.KaKaoOAuthService;
-import com.evan.wearesikgu.domain.auth.kakao.dtos.KakaoTokenResponseDTO;
+import com.evan.wearesikgu.auth.oauth.kakao.model.KaKaoOAuthService;
+import com.evan.wearesikgu.auth.oauth.kakao.dtos.KakaoTokenResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
