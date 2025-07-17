@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.domain.auth.kakao;
+package com.evan.wearesikgu.domain.auth.kakao.dtos;
 
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
 import com.evan.wearesikgu.common.exception.BaseException;

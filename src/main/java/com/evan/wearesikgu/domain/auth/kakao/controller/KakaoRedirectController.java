@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.domain.auth.controller;
+package com.evan.wearesikgu.domain.auth.kakao.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
