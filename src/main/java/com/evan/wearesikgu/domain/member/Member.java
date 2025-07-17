@@ -1,6 +1,7 @@
 package com.evan.wearesikgu.domain.member;
 
 import com.evan.wearesikgu.common.superentity.SuperEntity;
+import com.evan.wearesikgu.domain.auth.OAuth2Provider;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -35,4 +36,9 @@ public class Member extends SuperEntity {
 
     @Column(length = 13, unique = true)
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private OAuth2Provider provider;
+
+    private String providerId;
 }

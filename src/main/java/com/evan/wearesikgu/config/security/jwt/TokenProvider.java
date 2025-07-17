@@ -6,8 +6,13 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -15,6 +20,7 @@ import java.util.Date;
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
+    private final UserDetailsService userDetailsService;
 
     public String generateToken (String userId) {
         Date now = new Date();
@@ -33,7 +39,9 @@ public class TokenProvider {
                 .setExpiration(expiry)
                 .setSubject(userId)
                 .claim("id", userId)
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()), SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(
+                        Base64.getDecoder().decode(jwtProperties.getSecretKey())),
+                        SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -41,7 +49,8 @@ public class TokenProvider {
     public boolean validToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
+                    .setSigningKey(Keys.hmacShaKeyFor(
+                            Base64.getDecoder().decode(jwtProperties.getSecretKey())))
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -56,5 +65,25 @@ public class TokenProvider {
         } catch (IllegalArgumentException e) {
             throw new BaseException(BaseResponseStatus.TOKEN_ILLEGAL_ARGUMENT);
         }
+    }
+
+    //인증 객체 생성
+    public Authentication getAuthentication(String token) {
+        String userId = getUserIdFromToken(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+    }
+
+    // 토큰에서 userId 추출
+    public String getUserIdFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(
+                        Base64.getDecoder().decode(jwtProperties.getSecretKey())))
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }

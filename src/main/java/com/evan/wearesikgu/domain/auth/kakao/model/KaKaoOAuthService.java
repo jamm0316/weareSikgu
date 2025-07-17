@@ -1,5 +1,7 @@
-package com.evan.wearesikgu.domain.auth.kakao;
+package com.evan.wearesikgu.domain.auth.kakao.model;
 
+import com.evan.wearesikgu.domain.auth.kakao.dtos.KakaoOAuthClient;
+import com.evan.wearesikgu.domain.auth.kakao.dtos.KakaoUserInfoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
