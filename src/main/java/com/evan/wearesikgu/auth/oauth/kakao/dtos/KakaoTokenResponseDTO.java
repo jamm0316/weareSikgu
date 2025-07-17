@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.domain.auth.kakao.dtos;
+package com.evan.wearesikgu.auth.oauth.kakao.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

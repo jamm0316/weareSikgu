@@ -1,7 +1,7 @@
 package com.evan.wearesikgu.domain.member;
 
 import com.evan.wearesikgu.common.superentity.SuperEntity;
-import com.evan.wearesikgu.domain.auth.OAuth2Provider;
+import com.evan.wearesikgu.auth.oauth.OAuth2Provider;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
