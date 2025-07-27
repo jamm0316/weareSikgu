@@ -1,5 +1,7 @@
 package com.evan.wearesikgu.config.security.jwt;
 
+import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
+import com.evan.wearesikgu.common.exception.BaseException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +17,9 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private final TokenProvider tokenProvider;
+    private final JWTProvider jwtProvider;
+    private final String AUTHORIZATION = "Authorization";
+    private final String BEARER = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -24,10 +28,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         //2. 토큰 유효성 검사
-        if (token != null && tokenProvider.validToken(token)) {
-            //3. 토큰에서 사용자 정보 추출
-            Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            if (token != null && jwtProvider.validToken(token)) {
+                //3. 토큰에서 사용자 정보 추출
+                Authentication authentication = jwtProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (BaseException e) {
+            if (e.getStatus() == BaseResponseStatus.TOKEN_EXPIRED) {
+                request.setAttribute("exception", e);
+            } else {
+                throw e;
+            }
         }
 
         //4. 다음 필터로 요청 전달
@@ -35,9 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        String bearerToken = request.getHeader(AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith(BEARER)) {
+            return bearerToken.substring(BEARER.length());
         }
         return null;
     }

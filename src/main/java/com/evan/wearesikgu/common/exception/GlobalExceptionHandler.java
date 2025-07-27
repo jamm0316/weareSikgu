@@ -2,6 +2,7 @@ package com.evan.wearesikgu.common.exception;
 
 import com.evan.wearesikgu.common.baseResponse.BaseResponse;
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,7 +14,10 @@ public class GlobalExceptionHandler {
      * BaseException (커스텀 예외) 발생 시 처리하는 핸들러
      */
     @ExceptionHandler(BaseException.class)
-    public BaseResponse<Object> handleBaseException(BaseException e) {
+    public BaseResponse<Object> handleBaseException(BaseException e, HttpServletRequest request) {
+        if (e.getStatus() == BaseResponseStatus.TOKEN_EXPIRED) {
+            return new BaseResponse<>(BaseResponseStatus.TOKEN_EXPIRED);
+        }
         return new BaseResponse<>(e.getStatus());
     }
 

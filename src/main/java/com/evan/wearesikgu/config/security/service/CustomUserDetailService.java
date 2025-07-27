@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.config.security;
+package com.evan.wearesikgu.config.security.service;
 
 import com.evan.wearesikgu.domain.member.Member;
 import com.evan.wearesikgu.domain.member.MemberRepository;

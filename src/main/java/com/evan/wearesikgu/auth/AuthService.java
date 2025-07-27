@@ -1,7 +1,8 @@
 package com.evan.wearesikgu.auth;
 
 import com.evan.wearesikgu.auth.oauth.OAuthUserInfo;
-import com.evan.wearesikgu.config.security.jwt.TokenProvider;
+import com.evan.wearesikgu.config.token.TokenResponse;
+import com.evan.wearesikgu.config.token.TokenService;
 import com.evan.wearesikgu.domain.member.Member;
 import com.evan.wearesikgu.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +15,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
     final private MemberRepository memberRepository;
-    final private TokenProvider tokenProvider;
+    private final TokenService tokenService;
 
     @Transactional
-    public String login (OAuthUserInfo userInfo) {
+    public TokenResponse login (OAuthUserInfo userInfo) {
         Member member = memberRepository.findByProviderAndProviderId(
                 userInfo.getProvider(), userInfo.getProviderId())
                 .orElseGet(() -> signIn(userInfo));
 
-        return tokenProvider.generateToken(member.getId().toString());
+        return tokenService.generateTokenPair(member.getId().toString());
+    }
+
+    private Member register(OAuthUserInfo userInfo) {
+        Member member = memberRepository.findByProviderAndProviderId(
+                        userInfo.getProvider(), userInfo.getProviderId())
+                .orElseGet(() -> signIn(userInfo));
+
+        return memberRepository.save(member);
     }
 
     public Member signIn(OAuthUserInfo userInfo) {

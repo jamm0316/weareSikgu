@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class TokenProvider {
+public class JWTProvider {
 
     private final JwtProperties jwtProperties;
     private final UserDetailsService userDetailsService;
