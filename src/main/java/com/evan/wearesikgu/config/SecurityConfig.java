@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.config.security;
+package com.evan.wearesikgu.config;
 
 import com.evan.wearesikgu.config.security.jwt.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;

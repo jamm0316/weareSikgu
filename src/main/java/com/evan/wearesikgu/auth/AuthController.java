@@ -2,11 +2,15 @@ package com.evan.wearesikgu.auth;
 
 import com.evan.wearesikgu.auth.oauth.OAuthUserInfo;
 import com.evan.wearesikgu.common.baseResponse.BaseResponse;
+import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
+import com.evan.wearesikgu.common.util.CookieUtil;
+import com.evan.wearesikgu.config.security.jwt.JWTProvider;
+import com.evan.wearesikgu.config.token.TokenResponse;
+import com.evan.wearesikgu.config.token.TokenService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,10 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final TokenService tokenService;
 
     @PostMapping("/login")
-    public BaseResponse<String> login(@RequestBody OAuthUserInfo userInfo) {
-        String jwt = authService.login(userInfo);
+    public BaseResponse<Object> login(@RequestBody OAuthUserInfo userInfo) {
+        TokenResponse jwt = authService.login(userInfo);
         return new BaseResponse<>(jwt);
+    }
+
+    @PostMapping("/reissue")
+    public BaseResponse<Object> reissue(
+            @CookieValue String accessToken,
+            @CookieValue String refreshToken) {
+        String newAccessToken = tokenService.reissueAccessToken(accessToken, refreshToken);
+        return new BaseResponse<>(newAccessToken);
+    }
+
+    @PostMapping("/logout")
+    public BaseResponse<Object> logout(
+            @CookieValue String accessToken,
+            @CookieValue String refreshToken,
+            HttpServletResponse response) {
+        tokenService.deleteRefreshToken(accessToken, refreshToken);
+        CookieUtil.deleteCookie(response, "accessToken");
+        CookieUtil.deleteCookie(response, "refreshToken");
+
+        return new BaseResponse<>(BaseResponseStatus.SUCCESS);
     }
 }

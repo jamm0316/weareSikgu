@@ -18,10 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class TokenProviderTest {
     @Autowired
-    private TokenProvider tokenProvider;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private JWTProvider jwtProvider;
 
     @Autowired
     private JwtProperties jwtProperties;
@@ -33,7 +30,7 @@ public class TokenProviderTest {
         String userId = "23";
 
         //when
-        String token = tokenProvider.generateToken(userId);
+        String token = jwtProvider.generateToken(userId);
 
         //then
         String tokenUserId = Jwts.parserBuilder()
@@ -58,7 +55,7 @@ public class TokenProviderTest {
         //when
         BaseException result = null;
         try {
-            tokenProvider.validToken(token);
+            jwtProvider.validToken(token);
         } catch (BaseException e) {
             result = e;
         }
@@ -75,7 +72,7 @@ public class TokenProviderTest {
         String token = JwtFactory.withDefaultValues().createToken(jwtProperties);
 
         //when
-        boolean result = tokenProvider.validToken(token);
+        boolean result = jwtProvider.validToken(token);
 
         //then
         assertThat(result).isTrue();

@@ -1,4 +1,4 @@
-package com.evan.wearesikgu.config.security.jwt.refreshToken;
+package com.evan.wearesikgu.config.refreshToken;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

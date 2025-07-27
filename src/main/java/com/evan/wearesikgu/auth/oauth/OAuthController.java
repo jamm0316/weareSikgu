@@ -2,6 +2,8 @@ package com.evan.wearesikgu.auth.oauth;
 
 import com.evan.wearesikgu.auth.AuthService;
 import com.evan.wearesikgu.common.baseResponse.BaseResponse;
+import com.evan.wearesikgu.common.util.CookieUtil;
+import com.evan.wearesikgu.config.token.TokenResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +26,19 @@ public class OAuthController {
     }
 
     @GetMapping("callback/{provider}")
-    public BaseResponse<Object> handleCallback(@PathVariable String provider, @RequestParam String code) {
+    public BaseResponse<Object> handleCallback(
+            @PathVariable String provider,
+            @RequestParam String code,
+            HttpServletResponse response) {
+
         OAuthService oAuthService = oAuthServiceFactory.getService(provider);
         String accessToken = oAuthService.getAccessToken(code);
         OAuthUserInfo userInfo = oAuthService.getUserInfo(accessToken);
 
-        return new BaseResponse<>(authService.login(userInfo));
+        TokenResponse tokenResponse = authService.login(userInfo);
+
+        CookieUtil.addTokenCookies(response, tokenResponse);
+
+        return new BaseResponse<>(tokenResponse);
     }
 }
