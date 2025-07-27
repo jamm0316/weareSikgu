@@ -2,7 +2,6 @@ package com.evan.wearesikgu.config.security.jwt;
 
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
 import com.evan.wearesikgu.common.exception.BaseException;
-import com.evan.wearesikgu.domain.member.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.DisplayName;
