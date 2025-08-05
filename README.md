@@ -3,8 +3,6 @@
 
 ## ⚙️ Tech Stack
 
-**Client**: React ver.18, BootStrap
-
 **Server**: Java ver.17, SpringBoot, JPA, queryDSL
 
 **Database**: PostgreSQL
