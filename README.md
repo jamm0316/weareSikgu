@@ -36,7 +36,6 @@
   - Stateless JWT 한계 보완
 
 #### 성과
-✅ 보안 강화
-  - IP/User-Agent 기반 검증으로 비정상 재발급 차단
-✅ 탈취 피해 1회로 제한
-✅ 안전한 Refresh Token 구조 완성
+✅ 보안 강화: IP/User-Agent 기반 검증으로 비정상 재발급 차단<br>
+✅ 탈취 피해 1회로 제한<br>
+✅ 안전한 Refresh Token 구조 완성<br>
