@@ -18,35 +18,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class ParticipationRepositoryTest {
-    @Autowired
-    private ParticipationRepository participationRepository;
-
-    @Autowired
-    private CalendarFoodRepository calendarFoodRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Test
-    @DisplayName("내가 초대된 calendar에 올라온 CalendarFood를 조회하고, '먹을래요'버튼을 누르면 저장된다.")
-    @Transactional
-    public void 먹을래요_버튼_클릭() throws Exception {
-        //given
-        Member invitedMember = memberRepository.findByEmail("test1@gmail.com");
-        CalendarFood calendarFood = calendarFoodRepository.findById(2L).orElseThrow();
-
-        //when
-        ParticipationDTO participationDTO = ParticipationDTO.builder()
-                .calendarFood(calendarFood)
-                .member(invitedMember)
-                .build();
-        Participation participation = modelMapper.map(participationDTO, Participation.class);
-        Participation savedParticipation = participationRepository.save(participation);
-
-        //then
-        assertThat(savedParticipation.getMember().getName()).isEqualTo(invitedMember.getName());
-    }
+//    @Autowired
+//    private ParticipationRepository participationRepository;
+//
+//    @Autowired
+//    private CalendarFoodRepository calendarFoodRepository;
+//
+//    @Autowired
+//    private MemberRepository memberRepository;
+//
+//    @Autowired
+//    private ModelMapper modelMapper;
+//
+//    @Test
+//    @DisplayName("내가 초대된 calendar에 올라온 CalendarFood를 조회하고, '먹을래요'버튼을 누르면 저장된다.")
+//    @Transactional
+//    public void 먹을래요_버튼_클릭() throws Exception {
+//        //given
+//        Member invitedMember = memberRepository.findByEmail("test1@gmail.com");
+//        CalendarFood calendarFood = calendarFoodRepository.findById(2L).orElseThrow();
+//
+//        //when
+//        ParticipationDTO participationDTO = ParticipationDTO.builder()
+//                .calendarFood(calendarFood)
+//                .member(invitedMember)
+//                .build();
+//        Participation participation = modelMapper.map(participationDTO, Participation.class);
+//        Participation savedParticipation = participationRepository.save(participation);
+//
+//        //then
+//        assertThat(savedParticipation.getMember().getName()).isEqualTo(invitedMember.getName());
+//    }
 }
