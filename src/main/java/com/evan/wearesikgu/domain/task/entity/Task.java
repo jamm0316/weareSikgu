@@ -1,5 +1,7 @@
 package com.evan.wearesikgu.domain.task.entity;
 
+import com.evan.wearesikgu.common.enums.Day;
+import com.evan.wearesikgu.common.enums.Priority;
 import com.evan.wearesikgu.common.superentity.SuperEntity;
 import com.evan.wearesikgu.domain.project.entity.Project;
 import jakarta.persistence.*;
@@ -21,4 +23,14 @@ public class Task extends SuperEntity {
     private String description;
 
     private LocalDateTime due_date;
+
+    private String category;
+
+    @Enumerated(EnumType.STRING)
+    private Day dayLabel;
+
+    @Enumerated(EnumType.STRING)
+    private Priority priority;
+
+    private boolean isDone;
 }
