@@ -12,6 +12,7 @@ import com.evan.wearesikgu.domain.food.entity.FoodRepository;
 import com.evan.wearesikgu.domain.member.Member;
 import com.evan.wearesikgu.domain.member.MemberRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class CalendarFoodRepositoryTest {
+    @Test
+    @DisplayName("test 테스트")
+    public void test() throws Exception {
+        //given
+        int result = 2;
+        //when
+
+        //then
+        assertThat(result).isEqualTo(2);
+
+    }
+
 //    @Autowired
 //    private CalendarRepository calendarRepository;
 //
