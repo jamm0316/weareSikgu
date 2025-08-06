@@ -31,7 +31,6 @@ jobs:
       - name: 리포지토리를 가져옵니다
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.SUBMODULE_TOKEN }}
           submodules: recursive
 
       - name: JDK 17을 설치합니다
