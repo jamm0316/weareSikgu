@@ -41,7 +41,6 @@ public class TokenProviderTest {
 //
 //        assertThat(userId).isEqualTo(tokenUserId);
 //    }
-//
 //    @Test
 //    @DisplayName("validToken(): 만료된 토큰인 때에 예외를 던진다.")
 //    public void validToken_invalidToken() throws Exception {
