@@ -22,6 +22,10 @@ on:
       - '**.gradle'
       - 'src/**'
 
+permissions:
+  checks: write
+  contents: read
+
 jobs:
   build:
 
