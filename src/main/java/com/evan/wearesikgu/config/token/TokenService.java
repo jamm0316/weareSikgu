@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -21,23 +20,27 @@ public class TokenService {
 
     private final JWTProvider jwtProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    private final String prefix = "token:";
-
-    private static final long REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60;  //7일 (초 단위)
+    private final String PREFIX = "token:";
+    private final String RT_PREFIX = "rt";
+    private final String H_REFRESH_TOKEN = "refreshToken";
+    private final String H_UA_HASH = "uaHash";
+    private final String H_IP_PREFIX = "ipPrefix";
+    private final String H_LAST_SEEN = "lastSeen";
+    private final String H_CREAT_AT = "lastSeen";
 
     public TokenResponse generateTokenPair(String userId, String uaHash, String ipPrefix) {
         String accessToken = jwtProvider.generateToken(userId);
         String deviceId = FingerprintUtil.deviceId(uaHash, ipPrefix);
 
-        String k = "rt:" + userId + ":" + deviceId;
+        String k = RT_PREFIX + ":" + userId + ":" + deviceId;
         String refreshToken = UUID.randomUUID().toString();
 
         redisTemplate.opsForHash().putAll(k, Map.of(
-                "refreshToken", refreshToken,
-                "uaHash", uaHash,
-                "ipPrefix", ipPrefix,
-                "createdAt", String.valueOf(System.currentTimeMillis()),
-                "lastSean", String.valueOf(System.currentTimeMillis())
+                H_REFRESH_TOKEN, refreshToken,
+                H_UA_HASH, uaHash,
+                H_IP_PREFIX, ipPrefix,
+                H_CREAT_AT, String.valueOf(System.currentTimeMillis()),
+                H_LAST_SEEN, String.valueOf(System.currentTimeMillis())
         ));
 
         redisTemplate.expire(k, Duration.ofDays(7));
@@ -47,21 +50,21 @@ public class TokenService {
     public String reissueAccessToken(String accessToken, String refreshToken, String uaHashNow, String ipPrefixNow) {
         String userIdFromToken = jwtProvider.getUserIdFromToken(accessToken);
         String deviceId = FingerprintUtil.deviceId(uaHashNow, ipPrefixNow);
-        String k = "rt:" + userIdFromToken + ":" + deviceId;
+        String k = RT_PREFIX + ":" + userIdFromToken + ":" + deviceId;
 
         Map<Object, Object> stored = redisTemplate.opsForHash().entries(k);
 
-        if (!refreshToken.equals(stored.get("refreshToken")) ||
-                !uaHashNow.equals(stored.get("uaHash")) ||
-                !ipPrefixNow.equals(stored.get("ipPrefix"))) {
-            log.warn("RefreshToken mismatch: userId={}, diviceId={}", userIdFromToken, deviceId);
+        if (!refreshToken.equals(stored.get(H_REFRESH_TOKEN)) ||
+                !uaHashNow.equals(stored.get(H_UA_HASH)) ||
+                !ipPrefixNow.equals(stored.get(H_IP_PREFIX))) {
+            log.warn("RefreshToken mismatch: userId={}, deviceId={}", userIdFromToken, deviceId);
 
             throw new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
         }
 
         String newRefreshToken = UUID.randomUUID().toString();
-        redisTemplate.opsForHash().put(k, "refreshToken", newRefreshToken);
-        redisTemplate.opsForHash().put(k, "lastSean", String.valueOf(System.currentTimeMillis()));
+        redisTemplate.opsForHash().put(k, H_REFRESH_TOKEN, newRefreshToken);
+        redisTemplate.opsForHash().put(k, H_LAST_SEEN, String.valueOf(System.currentTimeMillis()));
 
         return jwtProvider.generateToken(userIdFromToken);
     }
