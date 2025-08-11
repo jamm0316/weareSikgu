@@ -26,7 +26,7 @@ public class TokenService {
     private final String H_UA_HASH = "uaHash";
     private final String H_IP_PREFIX = "ipPrefix";
     private final String H_LAST_SEEN = "lastSeen";
-    private final String H_CREAT_AT = "lastSeen";
+    private final String H_CREATED_AT = "createAt";
 
     public TokenResponse generateTokenPair(String userId, String uaHash, String ipPrefix) {
         String accessToken = jwtProvider.generateToken(userId);
@@ -39,7 +39,7 @@ public class TokenService {
                 H_REFRESH_TOKEN, refreshToken,
                 H_UA_HASH, uaHash,
                 H_IP_PREFIX, ipPrefix,
-                H_CREAT_AT, String.valueOf(System.currentTimeMillis()),
+                H_CREATED_AT, String.valueOf(System.currentTimeMillis()),
                 H_LAST_SEEN, String.valueOf(System.currentTimeMillis())
         ));
 
