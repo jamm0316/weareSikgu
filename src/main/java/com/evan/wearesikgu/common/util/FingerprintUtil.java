@@ -30,4 +30,8 @@ public final class FingerprintUtil {
             return "ua_unknown";
         }
     }
+
+    public static String deviceId(String uaHash, String ipPrefix) {
+        return uaHash + ":" + ipPrefix;
+    }
 }
