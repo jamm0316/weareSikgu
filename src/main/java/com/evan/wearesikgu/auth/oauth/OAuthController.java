@@ -3,7 +3,9 @@ package com.evan.wearesikgu.auth.oauth;
 import com.evan.wearesikgu.auth.AuthService;
 import com.evan.wearesikgu.common.baseResponse.BaseResponse;
 import com.evan.wearesikgu.common.util.CookieUtil;
+import com.evan.wearesikgu.common.util.FingerprintUtil;
 import com.evan.wearesikgu.config.token.TokenResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +31,17 @@ public class OAuthController {
     public BaseResponse<Object> handleCallback(
             @PathVariable String provider,
             @RequestParam String code,
+            HttpServletRequest request,
             HttpServletResponse response) {
 
         OAuthService oAuthService = oAuthServiceFactory.getService(provider);
         String accessToken = oAuthService.getAccessToken(code);
         OAuthUserInfo userInfo = oAuthService.getUserInfo(accessToken);
 
-        TokenResponse tokenResponse = authService.login(userInfo);
+        String uaHash = FingerprintUtil.uaHash(request.getHeader("User-Agent"));
+        String ipPrefix = FingerprintUtil.ipPrefix(FingerprintUtil.extractClientIp(request));
+
+        TokenResponse tokenResponse = authService.login(userInfo, uaHash, ipPrefix);
 
         CookieUtil.addTokenCookies(response, tokenResponse);
 
