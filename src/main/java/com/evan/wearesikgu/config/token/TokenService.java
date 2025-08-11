@@ -44,13 +44,24 @@ public class TokenService {
         return new TokenResponse(accessToken, refreshToken);
     }
 
-    public String reissueAccessToken(String accessToken, String refreshToken) {
+    public String reissueAccessToken(String accessToken, String refreshToken, String uaHashNow, String ipPrefixNow) {
         String userIdFromToken = jwtProvider.getUserIdFromToken(accessToken);
-        String refreshTokenByUserId = redisTemplate.opsForValue().get(userIdFromToken).substring(prefix.length());
+        String deviceId = FingerprintUtil.deviceId(uaHashNow, ipPrefixNow);
+        String k = "rt:" + userIdFromToken + ":" + deviceId;
 
-        if (refreshTokenByUserId == null || !refreshTokenByUserId.equals(refreshToken)) {
+        Map<Object, Object> stored = redisTemplate.opsForHash().entries(k);
+
+        if (!refreshToken.equals(stored.get("refreshToken")) ||
+                !uaHashNow.equals(stored.get("uaHash")) ||
+                !ipPrefixNow.equals(stored.get("ipPrefix"))) {
+            log.warn("RefreshToken mismatch: userId={}, diviceId={}", userIdFromToken, deviceId);
+
             throw new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
         }
+
+        String newRefreshToken = UUID.randomUUID().toString();
+        redisTemplate.opsForHash().put(k, "refreshToken", newRefreshToken);
+        redisTemplate.opsForHash().put(k, "lastSean", String.valueOf(System.currentTimeMillis()));
 
         return jwtProvider.generateToken(userIdFromToken);
     }
