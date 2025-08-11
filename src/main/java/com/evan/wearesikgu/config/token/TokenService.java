@@ -20,7 +20,6 @@ public class TokenService {
 
     private final JWTProvider jwtProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    private final String PREFIX = "token:";
     private final String RT_PREFIX = "rt";
     private final String H_REFRESH_TOKEN = "refreshToken";
     private final String H_UA_HASH = "uaHash";
