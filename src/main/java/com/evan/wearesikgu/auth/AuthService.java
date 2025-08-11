@@ -18,12 +18,12 @@ public class AuthService {
     private final TokenService tokenService;
 
     @Transactional
-    public TokenResponse login (OAuthUserInfo userInfo) {
+    public TokenResponse login (OAuthUserInfo userInfo, String uaHash, String ipPrefix) {
         Member member = memberRepository.findByProviderAndProviderId(
                 userInfo.getProvider(), userInfo.getProviderId())
                 .orElseGet(() -> signIn(userInfo));
 
-        return tokenService.generateTokenPair(member.getId().toString());
+        return tokenService.generateTokenPair(member.getId().toString(), uaHash, ipPrefix);
     }
 
     private Member register(OAuthUserInfo userInfo) {
