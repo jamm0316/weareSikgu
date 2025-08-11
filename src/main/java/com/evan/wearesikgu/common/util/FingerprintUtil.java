@@ -11,4 +11,9 @@ public final class FingerprintUtil {
         }
         return request.getRemoteAddr();
     }
+
+    public static String ipPrefix(String ip) {
+        if (ip.contains(":")) return ip.split(":")[0] + ":" + ip.split(":")[1];  //IPv6 → 64 정도
+        return ip.substring(0, ip.lastIndexOf(":"));
+    }
 }
