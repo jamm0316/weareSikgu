@@ -32,10 +32,10 @@ public class TokenService {
         String accessToken = jwtProvider.generateToken(userId);
         String deviceId = FingerprintUtil.deviceId(uaHash, ipPrefix);
 
-        String k = RT_PREFIX + ":" + userId + ":" + deviceId;
+        String key = rtKey(userId, deviceId);
         String refreshToken = UUID.randomUUID().toString();
 
-        redisTemplate.opsForHash().putAll(k, Map.of(
+        redisTemplate.opsForHash().putAll(key, Map.of(
                 H_REFRESH_TOKEN, refreshToken,
                 H_UA_HASH, uaHash,
                 H_IP_PREFIX, ipPrefix,
@@ -43,30 +43,60 @@ public class TokenService {
                 H_LAST_SEEN, String.valueOf(System.currentTimeMillis())
         ));
 
-        redisTemplate.expire(k, Duration.ofDays(7));
+        redisTemplate.expire(key, Duration.ofDays(7));
         return new TokenResponse(accessToken, refreshToken);
     }
 
     public String reissueAccessToken(String accessToken, String refreshToken, String uaHashNow, String ipPrefixNow) {
         String userIdFromToken = jwtProvider.getUserIdFromToken(accessToken);
         String deviceId = FingerprintUtil.deviceId(uaHashNow, ipPrefixNow);
-        String k = RT_PREFIX + ":" + userIdFromToken + ":" + deviceId;
+        String key = rtKey(userIdFromToken, deviceId);
 
-        Map<Object, Object> stored = redisTemplate.opsForHash().entries(k);
+        Map<Object, Object> stored = redisTemplate.opsForHash().entries(key);
 
-        if (!refreshToken.equals(stored.get(H_REFRESH_TOKEN)) ||
-                !uaHashNow.equals(stored.get(H_UA_HASH)) ||
-                !ipPrefixNow.equals(stored.get(H_IP_PREFIX))) {
-            log.warn("RefreshToken mismatch: userId={}, deviceId={}", userIdFromToken, deviceId);
+        validateFingerprintAndRt(userIdFromToken, deviceId, refreshToken, uaHashNow, ipPrefixNow, stored);
 
+        String newRefreshToken = UUID.randomUUID().toString();
+        redisTemplate.opsForHash().put(key, H_REFRESH_TOKEN, newRefreshToken);
+        redisTemplate.opsForHash().put(key, H_LAST_SEEN, String.valueOf(System.currentTimeMillis()));
+
+        return jwtProvider.generateToken(userIdFromToken);
+    }
+
+    public String rtKey(String userId, String deviceId) {
+        return RT_PREFIX + ":" + userId + ":" + deviceId;
+    }
+
+    private void validateFingerprintAndRt(
+            String userId,
+            String deviceId,
+            String refreshTokenFromCookie,
+            String uaHashNow,
+            String ipPrefixNow,
+            Map<Object, Object> stored) {
+        String rtStored = toStr(stored.get(H_REFRESH_TOKEN));
+        String uaStored = toStr(stored.get(H_UA_HASH));
+        String ipStored = toStr(stored.get(H_IP_PREFIX));
+
+        // 존재 여부 먼저 체크(NPE 방지 및 명확한 에러)
+        if (rtStored == null || uaStored == null || ipStored == null) {
+            log.warn("RT record missing fields: userId = {}, deviceId={}, fields={}", userId, deviceId, stored.keySet());
             throw new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
         }
 
-        String newRefreshToken = UUID.randomUUID().toString();
-        redisTemplate.opsForHash().put(k, H_REFRESH_TOKEN, newRefreshToken);
-        redisTemplate.opsForHash().put(k, H_LAST_SEEN, String.valueOf(System.currentTimeMillis()));
+        boolean mismatch =
+                !refreshTokenFromCookie.equals(rtStored) ||
+                        !uaHashNow.equals(uaStored) ||
+                        !ipPrefixNow.equals(ipStored);
 
-        return jwtProvider.generateToken(userIdFromToken);
+        if (mismatch) {
+            log.warn("RefreshToken missmatch: userId={}, deviceId={}", userId, deviceId);
+            throw new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    private static String toStr(Object o) {
+        return (o == null) ? null : o.toString();
     }
 
     public void deleteRefreshToken(String accessToken, String refreshToken) {
