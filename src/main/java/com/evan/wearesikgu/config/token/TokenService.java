@@ -2,12 +2,15 @@ package com.evan.wearesikgu.config.token;
 
 import com.evan.wearesikgu.common.baseResponse.BaseResponseStatus;
 import com.evan.wearesikgu.common.exception.BaseException;
+import com.evan.wearesikgu.common.util.FingerprintUtil;
 import com.evan.wearesikgu.config.security.jwt.JWTProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -22,18 +25,22 @@ public class TokenService {
 
     private static final long REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60;  //7일 (초 단위)
 
-    public TokenResponse generateTokenPair(String userId) {
+    public TokenResponse generateTokenPair(String userId, String uaHash, String ipPrefix) {
         String accessToken = jwtProvider.generateToken(userId);
+        String deviceId = FingerprintUtil.deviceId(uaHash, ipPrefix);
 
-        String refreshToken = redisTemplate.opsForValue().get(userId);
-        if (refreshToken == null) {
-            refreshToken = UUID.randomUUID().toString();
-            String redisValue = prefix + refreshToken;
-            redisTemplate.opsForValue().set(userId, redisValue, REFRESH_TOKEN_EXPIRY, TimeUnit.SECONDS);
-        }
+        String k = "rt:" + userId + ":" + deviceId;
+        String refreshToken = UUID.randomUUID().toString();
 
-        refreshToken = refreshToken.substring(prefix.length());
+        redisTemplate.opsForHash().putAll(k, Map.of(
+                "refreshToken", refreshToken,
+                "uaHash", uaHash,
+                "ipPrefix", ipPrefix,
+                "createdAt", String.valueOf(System.currentTimeMillis()),
+                "lastSean", String.valueOf(System.currentTimeMillis())
+        ));
 
+        redisTemplate.expire(k, Duration.ofDays(7));
         return new TokenResponse(accessToken, refreshToken);
     }
 
