@@ -23,7 +23,7 @@ public class Project extends SuperEntity {
     @NotNull(message = "color_id는 필수 입니다.")
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "color_id", nullable = false)
-    private Color colorId;
+    private Color color;
 
     @NotNull(message = "프로젝트 이름은 필수 입니다.")
     private String name;
