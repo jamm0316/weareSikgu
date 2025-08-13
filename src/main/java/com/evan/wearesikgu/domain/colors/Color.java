@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Colors {
+public class Color {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
