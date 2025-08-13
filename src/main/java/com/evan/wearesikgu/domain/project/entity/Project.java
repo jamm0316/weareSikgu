@@ -7,9 +7,13 @@ import com.evan.wearesikgu.domain.colors.Color;
 import com.evan.wearesikgu.domain.member.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
+@Getter
+@Setter
 public class Project extends SuperEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

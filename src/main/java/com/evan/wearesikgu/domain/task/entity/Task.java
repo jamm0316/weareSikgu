@@ -8,12 +8,16 @@ import com.evan.wearesikgu.domain.colors.Color;
 import com.evan.wearesikgu.domain.project.entity.Project;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class Task extends SuperEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
