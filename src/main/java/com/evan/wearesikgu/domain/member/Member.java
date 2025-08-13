@@ -30,6 +30,10 @@ public class Member extends SuperEntity {
     @Column(nullable = false)
     private String name;
 
+    @NotNull(message = "별명은 필수입니다.")
+    @Column(nullable = false)
+    private String nickName;
+
     @Column(length = 13, unique = true)
     private String phoneNumber;
 
