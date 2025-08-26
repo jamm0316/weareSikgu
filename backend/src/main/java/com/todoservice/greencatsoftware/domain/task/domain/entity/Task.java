@@ -6,7 +6,6 @@ import com.todoservice.greencatsoftware.common.enums.Priority;
 import com.todoservice.greencatsoftware.common.enums.Status;
 import com.todoservice.greencatsoftware.common.exception.BaseException;
 import com.todoservice.greencatsoftware.common.superEntity.SuperEntity;
-import com.todoservice.greencatsoftware.domain.color.entity.Color;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
 import com.todoservice.greencatsoftware.domain.task.domain.vo.Schedule;
 import jakarta.persistence.*;
