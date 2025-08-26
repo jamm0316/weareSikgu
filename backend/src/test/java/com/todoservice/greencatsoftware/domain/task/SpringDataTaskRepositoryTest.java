@@ -6,12 +6,15 @@ import com.todoservice.greencatsoftware.common.enums.Status;
 import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
 import com.todoservice.greencatsoftware.domain.color.infrastructure.persistence.SpringDataColorRepository;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
+import com.todoservice.greencatsoftware.domain.member.infrastructure.persistence.SpringDataMemberJpaRepository;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
 import com.todoservice.greencatsoftware.domain.project.infrastructure.persistence.SpringDataProjectJpaRepository;
 import com.todoservice.greencatsoftware.domain.task.domain.entity.Task;
 import com.todoservice.greencatsoftware.domain.task.domain.vo.Schedule;
 import com.todoservice.greencatsoftware.domain.task.infrastructure.persistence.SpringDataTaskJpaRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,20 @@ public class SpringDataTaskRepositoryTest {
     SpringDataProjectJpaRepository projectRepository;
 
     @Autowired
+    SpringDataMemberJpaRepository memberRepository;
+
+    @Autowired
     EntityManager em;
+
+    private Member member;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        member = Member.create("member1@test.com", "Ghwimreik12@", "null", "testName");
+        memberRepository.saveAndFlush(member);
+    }
+
+
 
     private Color saveColor(String name, String hexCode) {
         Color color = Color.create(name, hexCode);
@@ -48,6 +64,7 @@ public class SpringDataTaskRepositoryTest {
     private Project saveProject(Color color) {
         Project project = Project.create(
                 color,
+                member,
                 "프로젝트B",
                 Status.PLANNING,
                 "프로젝트 입니다",
@@ -123,7 +140,7 @@ public class SpringDataTaskRepositoryTest {
         assertThat(found.getSchedule().dueTimeEnabled()).isFalse();
         assertThat(found.getStatus()).isEqualTo(Status.PLANNING);
     }
-    
+
     @Test
     @DisplayName("수정(더티체킹): title/priority/status/dayLabel/schedule 변경")
     public void updateDirtyChecking() throws Exception {
@@ -136,12 +153,13 @@ public class SpringDataTaskRepositoryTest {
         Color newColor = saveColor("BLUE", "#0000FF");
         Project newProject = projectRepository.saveAndFlush(
                 Project.create(
-                    newColor,
-                    "새로운 프로젝트",
-                    Status.PLANNING,
-                    "새로운 프로젝트 입니다",
-                    true,
-                    Visibility.TEAM));
+                        newColor,
+                        member,
+                        "새로운 프로젝트",
+                        Status.PLANNING,
+                        "새로운 프로젝트 입니다",
+                        true,
+                        Visibility.TEAM));
 
         //when
         task.changeProject(newProject);

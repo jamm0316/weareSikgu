@@ -4,10 +4,13 @@ import com.todoservice.greencatsoftware.common.enums.Status;
 import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
 import com.todoservice.greencatsoftware.domain.color.infrastructure.persistence.SpringDataColorRepository;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
+import com.todoservice.greencatsoftware.domain.member.infrastructure.persistence.SpringDataMemberJpaRepository;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
 import com.todoservice.greencatsoftware.domain.project.domain.vo.Period;
 import com.todoservice.greencatsoftware.domain.project.infrastructure.persistence.SpringDataProjectJpaRepository;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,18 @@ public class SpringDataProjectRepositoryTest {
     SpringDataColorRepository colorRepository;
 
     @Autowired
+    SpringDataMemberJpaRepository memberRepository;
+
+    @Autowired
     EntityManager em;
+
+    private Member member;
+    @BeforeEach
+    public void setUp() throws Exception {
+        member = Member.create("member1@test.com", "Ghwimreik12@", "null", "testName");
+        memberRepository.saveAndFlush(member);
+    }
+
 
     @Test
     @DisplayName("저장 & 조회")
@@ -39,6 +53,7 @@ public class SpringDataProjectRepositoryTest {
         Color color = colorRepository.saveAndFlush(Color.create("RED", "#FF0000"));
         Project project = Project.create(
                 color,
+                member,
                 "프로젝트A",
                 Status.PLANNING,
                 "프로젝트A 입니다.",
@@ -72,6 +87,7 @@ public class SpringDataProjectRepositoryTest {
         Period period = Period.of(startDate, endDate, actualEndDate);
         Project project = Project.createWithPeriod(
                 color,
+                member,
                 "프로젝트A",
                 Status.PLANNING,
                 period,
@@ -121,6 +137,7 @@ public class SpringDataProjectRepositoryTest {
         Period period = Period.of(startDate, endDate, actualEndDate);
         Project project = Project.createWithPeriod(
                 color,
+                member,
                 "삭제용",
                 Status.PLANNING,
                 period,

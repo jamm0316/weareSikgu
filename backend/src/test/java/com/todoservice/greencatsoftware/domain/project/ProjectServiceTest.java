@@ -6,6 +6,7 @@ import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.common.exception.BaseException;
 import com.todoservice.greencatsoftware.domain.color.application.ColorService;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
 import com.todoservice.greencatsoftware.domain.project.application.ProjectFactory;
 import com.todoservice.greencatsoftware.domain.project.application.ProjectService;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
@@ -41,6 +42,8 @@ public class ProjectServiceTest {
     @InjectMocks
     private ProjectService projectService;
 
+    private Member member = Member.create("member1@test.com", "12345", "null", "testName");
+
     @Test
     @DisplayName("listProject: 전체 조회")
     public void listProject() throws Exception {
@@ -49,9 +52,9 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project projectA = Project.createWithPeriod(Color.create("RED", "#FF0000"), "프로젝트 A", Status.PLANNING,
+        Project projectA = Project.createWithPeriod(Color.create("RED", "#FF0000"),member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
-        Project projectB = Project.createWithPeriod(Color.create("RED", "#FF0000"), "프로젝트 B", Status.PLANNING,
+        Project projectB = Project.createWithPeriod(Color.create("RED", "#FF0000"), member,"프로젝트 B", Status.PLANNING,
                 period, "프로젝트 B입니다", true, Visibility.PRIVATE);
 
         //when
@@ -70,7 +73,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         //when
@@ -93,7 +96,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         //when
@@ -127,6 +130,7 @@ public class ProjectServiceTest {
         Period originalPeriod = Period.of(startDate, endDate, actualEndDate);
         Project project = Project.createWithPeriod(
                 Color.create("RED", "#FF000000"),
+                member,
                 "프로젝트 A",
                 Status.PLANNING,
                 originalPeriod,
@@ -167,7 +171,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
@@ -193,7 +197,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period originalPeriod = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 originalPeriod, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
@@ -224,7 +228,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
@@ -250,7 +254,7 @@ public class ProjectServiceTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), "프로젝트 A", Status.PLANNING,
+        Project project = Project.createWithPeriod(Color.create("RED", "#FF000000"), member, "프로젝트 A", Status.PLANNING,
                 period, "프로젝트 A입니다", true, Visibility.PRIVATE);
 
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));

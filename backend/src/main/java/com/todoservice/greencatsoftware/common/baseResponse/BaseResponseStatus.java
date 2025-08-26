@@ -17,15 +17,19 @@ public enum BaseResponseStatus {
     INVALID_REFRESH_TOKEN(false, 2004, "유효하지 않거나 만료된 리프레시 토큰입니다."),
 
     /**
-     * 3000: Project 오류
-     */
-    KAKAO_REDIRECT_MISMATCH(false, 3001, "카카오 Redirect URI가 일치하지 않습니다."),
-
-    /**
-     * 4000: 서버 오류
+     * 3000: 서버 오류
      */
     INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다."),
     UNSUPPORTED_PROVIDER(false, 4001, "지원하지 않는 OAuth2 Provider 입니다."),
+
+    /**
+     * 4000: Member 오류
+     */
+    MISSING_EMAIL_FOR_MEMBER(false, 3001, "Member의 email은 필수입니다."),
+    MISSING_PASSWORD_FOR_MEMBER(false, 3002, "Member의 password는 필수입니다."),
+    MISSING_NAME_FOR_MEMBER(false, 3003, "Member의 name는 필수입니다."),
+    NOT_FOUND_MEMBER(false, 3004, "유효하지 않은 멤버 입니다"),
+    KAKAO_REDIRECT_MISMATCH(false, 3001, "카카오 Redirect URI가 일치하지 않습니다."),
 
     /**
      * 5000: JWT 오류
@@ -48,6 +52,7 @@ public enum BaseResponseStatus {
     MISSING_STATUS_FOR_PROJECT(false, 6007, "Project는 상태값이 필수 입니다."),
     MISSING_IS_PUBLIC_FOR_PROJECT(false, 6008, "Project 공개 여부는 필수 입니다."),
     MISSING_VISIBILITY_FOR_PROJECT(false, 6009, "Project 공개 범위는 필수 입니다."),
+    MISSING_MEMBER_FOR_PROJECT(false, 6010, "Project의 Member는 필수입니다."),
 
 
     /**

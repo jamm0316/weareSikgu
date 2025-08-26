@@ -7,6 +7,7 @@ import com.todoservice.greencatsoftware.common.enums.Status;
 import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.common.exception.BaseException;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
 import com.todoservice.greencatsoftware.domain.project.domain.vo.Period;
 import com.todoservice.greencatsoftware.domain.task.domain.entity.Task;
@@ -25,15 +26,16 @@ public class TaskTest {
     private Color color(String name, String hexCode) {
         return Color.create(name, hexCode);
     }
+    private Member member = Member.create("member1@test.com", "12345", "null", "testName");
 
     private Project projectWithPeriod() {
-        return Project.createWithPeriod(color("RED", "#FF0000"), "프로젝트", Status.PLANNING,
+        return Project.createWithPeriod(color("RED", "#FF0000"), member, "프로젝트", Status.PLANNING,
                 Period.of(LocalDate.of(2005, 1, 1), LocalDate.of(2005, 12, 31), LocalDate.of(2005, 12, 31)),
                 "description", true, Visibility.PUBLIC);
     }
 
     private Project project() {
-        return Project.create(color("RED", "#FF0000"), "프로젝트", Status.PLANNING,
+        return Project.create(color("RED", "#FF0000"), member,"프로젝트", Status.PLANNING,
                 "description", true, Visibility.PUBLIC);
     }
 
@@ -124,7 +126,7 @@ public class TaskTest {
         Task task = Task.create(project(), Priority.HIGH,
                 "알고리즘 공부", "백준123", DayLabel.MORNING, Status.PLANNING);
 
-        Project newProject = Project.create(color("BLUE", "#0000FF"), "새로운 프로젝트",
+        Project newProject = Project.create(color("BLUE", "#0000FF"), member,"새로운 프로젝트",
                 Status.COMPLETED, "new description", true, Visibility.TEAM);
 
         Color newColor = Color.create("GREEN", "#00FF00");
