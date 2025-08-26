@@ -14,6 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -25,7 +27,9 @@ public class Task extends SuperEntity {
 
     @NotNull(message = "프로젝트 id는 필수 입니다.")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_id", nullable = false,
+            foreignKey = @ForeignKey(name = "FK_TASK_PROJECT"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Project project;
 
     @NotNull(message = "priority는 필수 입니다.")
