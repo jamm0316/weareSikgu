@@ -5,6 +5,7 @@ import com.todoservice.greencatsoftware.common.enums.Status;
 import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.common.exception.BaseException;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
 import com.todoservice.greencatsoftware.domain.project.domain.entity.Project;
 import com.todoservice.greencatsoftware.domain.project.domain.vo.Period;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ProjectTest {
 
+    private Member member = Member.create("member1@test.com", "12345", "null", "testName");
+
     @Test
     @DisplayName("정상 생성: 기간 없이 생성")
     public void create_without_period_ok() throws Exception {
@@ -24,12 +27,14 @@ public class ProjectTest {
         Color color = Color.create("RED", "FF0000");
 
         //when
-        Project project = Project.create(color
-                , "   나의 프로젝트    "
-                , Status.PLANNING,
-                "   잘해보자구~"
-                , true
-                , Visibility.PUBLIC);
+        Project project = Project.create(
+                color,
+                member,
+                "   나의 프로젝트    ",
+                Status.PLANNING,
+                "   잘해보자구~",
+                true,
+                Visibility.PUBLIC);
 
         //then
         assertThat(project.getName()).isEqualTo("나의 프로젝트");
@@ -52,13 +57,14 @@ public class ProjectTest {
 
         //when
         Project project = Project.createWithPeriod(
-                color
-                , "   나의 프로젝트    "
-                , Status.PLANNING
-                ,period
-                ,"   잘해보자구~"
-                , true
-                , Visibility.PUBLIC);
+                color,
+                member,
+                 "   나의 프로젝트    ",
+                Status.PLANNING,
+                period,
+                "   잘해보자구~",
+                true,
+                Visibility.PUBLIC);
 
         //then
         assertThat(project.getName()).isEqualTo("나의 프로젝트");
@@ -82,33 +88,33 @@ public class ProjectTest {
         //then
         //color null
         assertThatThrownBy(() -> Project.create(
-                null, "name", Status.PLANNING, "description", true, Visibility.PUBLIC
+                null, member,"name", Status.PLANNING, "description", true, Visibility.PUBLIC
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.MISSING_COLOR_FOR_PROJECT.getMessage());
 
         //name empty
         assertThatThrownBy(() -> Project.create(
-                color, "", Status.PLANNING, "description", true, Visibility.PUBLIC
+                color, member,"", Status.PLANNING, "description", true, Visibility.PUBLIC
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.MISSING_TITLE_FOR_PROJECT.getMessage());
 
         //name toLong
         String longName = "a".repeat(101);
         assertThatThrownBy(() -> Project.create(
-                color, longName, Status.PLANNING, "description", true, Visibility.PUBLIC
+                color, member,longName, Status.PLANNING, "description", true, Visibility.PUBLIC
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.TITLE_EXCEEDS_LIMIT_FOR_PROJECT.getMessage());
 
         //status null
         assertThatThrownBy(() -> Project.create(
-                color, "name", null, "description", true, Visibility.PUBLIC
+                color, member,"name", null, "description", true, Visibility.PUBLIC
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.MISSING_STATUS_FOR_PROJECT.getMessage());
 
         //isPublic null
         assertThatThrownBy(() -> Project.create(
-                color, "name", Status.PLANNING, "description", null, Visibility.PUBLIC
+                color, member,"name", Status.PLANNING, "description", null, Visibility.PUBLIC
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.MISSING_IS_PUBLIC_FOR_PROJECT.getMessage());
 
         //visibility null
         assertThatThrownBy(() -> Project.create(
-                color, "name", Status.PLANNING, "description", true, null
+                color, member,"name", Status.PLANNING, "description", true, null
         )).isInstanceOf(BaseException.class).hasMessage(BaseResponseStatus.MISSING_VISIBILITY_FOR_PROJECT.getMessage());
     }
 
@@ -121,13 +127,15 @@ public class ProjectTest {
         LocalDate endDate = LocalDate.of(2025, 12, 31);
         LocalDate actualEndDate = LocalDate.of(2025, 12, 31);
         Period period = Period.of(startDate, endDate, actualEndDate);
-        Project project = Project.createWithPeriod(color
-                ,"   나의 프로젝트    "
-                ,Status.PLANNING
-                ,period
-                ,"   잘해보자구~"
-                ,true
-                ,Visibility.PUBLIC);
+        Project project = Project.createWithPeriod(
+                color,
+                member,
+                "   나의 프로젝트    ",
+                Status.PLANNING,
+                period,
+                "   잘해보자구~",
+                true,
+                Visibility.PUBLIC);
 
         //when
         project.changeColor(Color.create("BLUE", "0000FF"));
@@ -158,6 +166,7 @@ public class ProjectTest {
         Color color = Color.create("RED", "FF0000");
         Project project = Project.create(
                 color,
+                member,
                 "name",
                 Status.PLANNING,
                 "description",
