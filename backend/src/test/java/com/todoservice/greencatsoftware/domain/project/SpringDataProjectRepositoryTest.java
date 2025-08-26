@@ -41,7 +41,7 @@ public class SpringDataProjectRepositoryTest {
     private Member member;
     @BeforeEach
     public void setUp() throws Exception {
-        member = Member.create("member1@test.com", "12345", "null", "testName");
+        member = Member.create("member1@test.com", "Ghwimreik12@", "null", "testName");
         memberRepository.saveAndFlush(member);
     }
 
