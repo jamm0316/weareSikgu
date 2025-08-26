@@ -7,5 +7,4 @@ export const ENDPOINTS = {
   UPDATE_PROJECT_FIELD_BY_ID: (id) => `${VERSION}/${DOMAIN}/${id}/field`,
   SEARCH_PROJECTS: (q) =>
     `${VERSION}/${DOMAIN}/search?keyword=${encodeURIComponent(q)}`,
-  DELETE_PROJECT_BY_ID: (id) => `${VERSION}/${DOMAIN}/${id}`,
 }

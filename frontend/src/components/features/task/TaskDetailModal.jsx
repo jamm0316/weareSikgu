@@ -2,17 +2,14 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {X, Edit2, Check, User, Calendar, Trash2, ChevronDown, Clock, AlertTriangle} from 'lucide-react';
 import useDetailTask from '/src/hooks/task/useDetailTask.jsx';
 import useUpdateFieldTask from '/src/hooks/task/useUpdateFieldTask.jsx';
-// import useDeleteTask from '/src/hooks/task/useDeleteTask.jsx';
+import useDeleteTask from '/src/hooks/task/useDeleteTask.jsx';
 import {colorMap} from '/src/data/project/constants.jsx';
 import {taskPriorityOptions, taskStatusOptions, dayLabelOptions} from "/src/data/task/constants.jsx";
 
 const TaskDetailModal = ({taskId, isOpen, onClose, onUpdate}) => {
   const {data: task, loading, error, refetch} = useDetailTask(taskId);
   const {updateFieldTask, loading: updateFieldLoading} = useUpdateFieldTask();
-  // const {deleteTask, loading: deleteLoading} = useDeleteTask();
-
-  // 임시로 loading 상태들 설정 (실제 hooks 구현 후 제거)
-  const deleteLoading = false;
+  const {deleteTask, loading: deleteLoading} = useDeleteTask();
 
   const detail = useMemo(() => task ?? null, [task]);
 
@@ -139,18 +136,12 @@ const TaskDetailModal = ({taskId, isOpen, onClose, onUpdate}) => {
 
   const handleDelete = async () => {
     if (window.confirm('정말로 이 작업을 삭제하시겠습니까?')) {
-      // const res = await deleteTask(taskId);
-      // if (res?.success) {
-      //   resetInlineEdits();
-      //   onClose();
-      //   onUpdate && onUpdate();
-      // }
-
-      // 임시로 성공 처리
-      console.log('Deleting task:', taskId);
-      resetInlineEdits();
-      onClose();
-      onUpdate && onUpdate();
+      const res = await deleteTask(taskId);
+      if (res?.success) {
+        resetInlineEdits();
+        onClose();
+        onUpdate && onUpdate();
+      }
     }
   };
 

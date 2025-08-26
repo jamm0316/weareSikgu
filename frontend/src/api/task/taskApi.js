@@ -26,4 +26,9 @@ export const taskApi = {
     const response = await apiClient.patch(ENDPOINTS.UPDATE_TASK_FIELD_BY_ID(id), taskData);
     return response.data.result;
   },
+
+  deleteTaskById: async (id) => {
+    const response = await apiClient.delete(ENDPOINTS.TASK_BY_ID(id));
+    return response.data.result;
+  }
 }
