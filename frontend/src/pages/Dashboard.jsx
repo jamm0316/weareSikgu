@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import SearchBar from "/src/components/ui/SearchBar.jsx";
 import TabSelector from "/src/components/layout/TabSelector.jsx";
 import HorizontalProjectScroll from "/src/components/ui/HorizontalProjectScroll.jsx";
@@ -55,6 +55,11 @@ const Dashboard = () => {
     error: searchError,
     clear: clearSearch,
   } = useSearchProjects("");
+
+  const refetchAllTasks = useCallback(() => {
+    refetchTasks()
+    refetchTodayTasks()
+  }, [refetchTasks, refetchTodayTasks]);
 
   const handleSearch = (query) => {
     setSearchKeyword(query);
@@ -132,7 +137,7 @@ const Dashboard = () => {
             <HorizontalTaskScroll
               tasks={todayForCard}
               title="Active Tasks"
-              onUpdate={refetchTodayTasks}
+              onUpdate={refetchAllTasks}
             />
           {/*)}*/}
         </>
@@ -183,7 +188,7 @@ const Dashboard = () => {
             <HorizontalTaskScroll
               tasks={tasksForCard}
               title="ALL Tasks"
-              onUpdate={refetchTasks}
+              onUpdate={refetchAllTasks}
             />
           {/*)}*/}
         </>
