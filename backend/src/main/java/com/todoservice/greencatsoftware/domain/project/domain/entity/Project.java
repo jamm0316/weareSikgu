@@ -6,6 +6,7 @@ import com.todoservice.greencatsoftware.common.enums.Visibility;
 import com.todoservice.greencatsoftware.common.exception.BaseException;
 import com.todoservice.greencatsoftware.common.superEntity.SuperEntity;
 import com.todoservice.greencatsoftware.domain.color.entity.Color;
+import com.todoservice.greencatsoftware.domain.member.domain.entity.Member;
 import com.todoservice.greencatsoftware.domain.project.domain.vo.Period;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,14 @@ public class Project extends SuperEntity {
             foreignKey = @ForeignKey(name = "FK_PROJECT_COLOR")
     )
     private Color color;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "member_id", nullable = false,
+            foreignKey = @ForeignKey(name = "FK_PROJECT_MEMBER")
+    )
+    private Member member;
 
     @NotNull(message = "프로젝트 이름은 필수 입니다.")
     private String name;
@@ -52,6 +61,7 @@ public class Project extends SuperEntity {
     private Visibility visibility;
 
     public Project(Color color,
+                   Member member,
                    String name,
                    Status status,
                    Period period,
@@ -59,9 +69,10 @@ public class Project extends SuperEntity {
                    Boolean isPublic,
                    Visibility visibility) {
 
-        validateDomainInvariants(color, name, status, isPublic, visibility);
+        validateDomainInvariants(color, member, name, status, isPublic, visibility);
 
         this.color = color;
+        this.member = member;
         this.name = name.trim();
         this.status = status;
         this.period = period;
@@ -71,12 +82,17 @@ public class Project extends SuperEntity {
     }
 
     private void validateDomainInvariants(Color color,
+                                         Member member,
                                          String name,
                                          Status status,
                                          Boolean isPublic,
                                          Visibility visibility) {
         if (color == null) {
             throw new BaseException(BaseResponseStatus.MISSING_COLOR_FOR_PROJECT);
+        }
+
+        if (member == null) {
+            throw new BaseException(BaseResponseStatus.MISSING_MEMBER_FOR_PROJECT);
         }
 
         if (name == null || name.trim().isEmpty()) {
@@ -100,14 +116,14 @@ public class Project extends SuperEntity {
         }
     }
 
-    public static Project create(Color color, String name, Status status,
+    public static Project create(Color color, Member member, String name, Status status,
                                  String description, Boolean isPublic, Visibility visibility) {
-        return new Project(color, name, status, null, description, isPublic, visibility);
+        return new Project(color, member, name, status, null, description, isPublic, visibility);
     }
 
-    public static Project createWithPeriod(Color color, String name, Status status,
+    public static Project createWithPeriod(Color color, Member member, String name, Status status,
                                            Period period, String description, Boolean isPublic, Visibility visibility) {
-        return new Project(color, name, status, period, description, isPublic, visibility);
+        return new Project(color, member, name, status, period, description, isPublic, visibility);
     }
 
     public void changeColor(Color color) {
