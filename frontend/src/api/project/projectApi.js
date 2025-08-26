@@ -25,5 +25,10 @@ export const projectApi = {
   searchProject: async (search) => {
     const response  = await apiClient.get(ENDPOINTS.SEARCH_PROJECTS(search));
     return response.data.result;
+  },
+
+  deleteProjectById: async (id) => {
+    const response = await apiClient.delete(ENDPOINTS.PROJECT_BY_ID(id));
+    return response.data.result;
   }
 }
