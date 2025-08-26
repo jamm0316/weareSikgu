@@ -10,7 +10,7 @@ const useDeleteProject = () => {
       setLoading(true);
       setError(null);
 
-      const response = await projectApi.deleteProject(projectId);
+      const response = await projectApi.deleteProjectById(projectId);
 
       return {
         success: true,
