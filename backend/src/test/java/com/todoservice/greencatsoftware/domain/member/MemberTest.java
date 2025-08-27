@@ -128,6 +128,20 @@ public class MemberTest {
     }
 
     @Test
+    @DisplayName("profileImageUrl 변경 성공")
+    public void change_ok_profileImageUrl() throws Exception {
+        //given
+        Member member = Member.create("email@email.com", "Test1234@!#$", null, "testName");
+
+        //when
+        member.changeProfileImageUrl("src/image/newImageUrl");
+
+        //then
+        assertThat(member.getProfileImageUrl()).isEqualTo("src/image/newImageUrl");
+
+    }
+
+    @Test
     @DisplayName("name 변경 성공")
     public void change_ok_name() throws Exception {
         //given
