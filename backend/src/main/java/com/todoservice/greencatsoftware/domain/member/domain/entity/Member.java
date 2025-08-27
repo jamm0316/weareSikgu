@@ -36,7 +36,6 @@ public class Member {
             message = "비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다.")
     private String password;
 
-    @Column(nullable = false)
     private String profileImageUrl;
 
     @NotNull(message = "이름은 필수입니다.")
@@ -44,7 +43,7 @@ public class Member {
     private String name;
 
     public Member(String email, String password, String profileImageUrl, String name) {
-        validateDomainInvariants(email, password, profileImageUrl, name);
+        validateDomainInvariants(email, password, name);
 
         this.email = email;
         this.password = password;
@@ -52,13 +51,13 @@ public class Member {
         this.name = name;
     }
 
-    private void validateDomainInvariants(String email, String password, String profileImageUrl, String name) {
+    private void validateDomainInvariants(String email, String password, String name) {
         if (email == null || email.trim().isEmpty()) {
             throw new BaseException(BaseResponseStatus.MISSING_EMAIL_FOR_MEMBER);
         }
 
         if (password == null || password.trim().isEmpty()) {
-            throw new BaseException(BaseResponseStatus.MISSING_EMAIL_FOR_MEMBER);
+            throw new BaseException(BaseResponseStatus.MISSING_PASSWORD_FOR_MEMBER);
         }
 
         if (name == null || name.trim().isEmpty()) {
@@ -68,5 +67,30 @@ public class Member {
 
     public static Member create(String email, String password, String profileImageUrl, String name) {
         return new Member(email, password, profileImageUrl, name);
+    }
+
+    public void changeEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new BaseException(BaseResponseStatus.MISSING_EMAIL_FOR_MEMBER);
+        }
+        this.email = email;
+    }
+
+    public void changePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new BaseException(BaseResponseStatus.MISSING_PASSWORD_FOR_MEMBER);
+        }
+        this.password = password;
+    }
+
+    public void changeProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public void changeName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new BaseException(BaseResponseStatus.MISSING_NAME_FOR_MEMBER);
+        }
+        this.name = name;
     }
 }
