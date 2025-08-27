@@ -43,7 +43,7 @@ public class Member {
     private String name;
 
     public Member(String email, String password, String profileImageUrl, String name) {
-        validateDomainInvariants(email, password, profileImageUrl, name);
+        validateDomainInvariants(email, password, name);
 
         this.email = email;
         this.password = password;
@@ -51,7 +51,7 @@ public class Member {
         this.name = name;
     }
 
-    private void validateDomainInvariants(String email, String password, String profileImageUrl, String name) {
+    private void validateDomainInvariants(String email, String password, String name) {
         if (email == null || email.trim().isEmpty()) {
             throw new BaseException(BaseResponseStatus.MISSING_EMAIL_FOR_MEMBER);
         }
