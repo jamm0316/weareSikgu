@@ -4,7 +4,7 @@ import com.todoservice.greencatsoftware.config.security.jwt.TokenResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class CookieUtil { //
+public class CookieUtil { //test
     private static final int ACCESS_TOKEN_MAX_AGE_IN_SECONDS = 60 * 15;  //15분.
     private static final int REFRESH_TOKEN_MAX_AGE_IN_SECONDS = 60 * 60 * 24 * 7;  //7일
 
